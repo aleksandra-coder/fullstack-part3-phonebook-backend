@@ -1,0 +1,34 @@
+{
+  "name": "phonebook-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified \" && exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleksandra-coder/fullstack-part3-phonebook-backend.git"
+  },
+  "keywords": [
+    "phonebook",
+    "backend"
+  ],
+  "author": "Aleksandra Postola",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aleksandra-coder/fullstack-part3-phonebook-backend/issues"
+  },
+  "homepage": "https://github.com/aleksandra-coder/fullstack-part3-phonebook-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "json-server": "^0.16.3",
+    "nodemon": "^2.0.12"
+  }
+}
