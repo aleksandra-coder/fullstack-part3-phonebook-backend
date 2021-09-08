@@ -107,6 +107,7 @@ app.get('/info', (request, response) => {
     persons = persons.concat(newPerson)
   
     response.json(newPerson)
+    console.log(request.body)
   })
   
   const unknownEndpoint = (req, res) => {
