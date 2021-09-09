@@ -16,7 +16,6 @@ mongoose.connect(url)
 const personSchema = new mongoose.Schema({
   name: String,
   number: String,
-  id: Number,
 })
 
 const Person = mongoose.model('Person', personSchema)
@@ -26,8 +25,11 @@ const Person = mongoose.model('Person', personSchema)
 //   number: '32-43-6666',
 // })
 
+process.argv.forEach((name, number) => {
+    console.log(`${name}: ${number}`);
+  });
 
-Person.save().then(result => {
+personSchema.save({}).then(result => {
   console.log('person saved!')
   mongoose.connection.close()
 })
