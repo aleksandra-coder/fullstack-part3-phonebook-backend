@@ -2,10 +2,10 @@ const { bodyParser } = require('json-server')
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
-  console.log('Please provide the password as an argument: node mongo.js <password>')
-  process.exit(1)
-}
-
+    console.log('Please provide the password as an argument: node mongo.js <password>')
+    process.exit(1)
+  }
+  
 const password = process.argv[2]
 
 const url =
@@ -20,24 +20,27 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-// const person = new Person({
-//   name: 'Anna May',
-//   number: '32-43-6666',
-// })
-
-process.argv.forEach((name, number) => {
-    console.log(`${name}: ${number}`);
-  });
-
-personSchema.save({}).then(result => {
-  console.log('person saved!')
-  mongoose.connection.close()
-})
+const person = new Person({
+    name: process.argv[3],
+    number: process.argv[4],
+  })
 
 
-Person.find({}).then(result => {
-    result.forEach(person => {
-      console.log(person)
+if (process.argv[3] && process.argv[4]) {
+    person.save().then(result => {
+        console.log(`added ${person.name} number ${person.number} to phonebook`)
+        mongoose.connection.close()
+      })
+    
+} 
+else if (process.argv.length === 3) {
+        Person.find({}).then(result => {
+            console.log(`Phonebook:`);
+        result.forEach(person => {
+      console.log(`${person.name} ${person.number} `)
     })
     mongoose.connection.close()
   })
+    
+} 
+
