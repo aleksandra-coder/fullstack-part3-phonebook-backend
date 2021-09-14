@@ -14,9 +14,9 @@ app.use(express.static('build'))
 
 app.use(morgan('tiny'));
 
-app.get("/", (req, res) => {
-    res.send("<h1>Hello world!</h1>");
-  });
+// app.get("/", (req, res) => {
+//     res.send("<h1>Hello world!</h1>");
+//   });
 
   // ex 3.8
 // morgan.token('persons', (req, res) => JSON.stringify(req.body));
@@ -48,14 +48,14 @@ app.get("/", (req, res) => {
 // ]
 
 
-
+//  ex 3.18
 app.get('/info', (request, response) => {
-    const number = persons.length
-    const nDate = new Date();
-      
-    console.log(nDate);
-
-    response.json(`Phonebook has info for ${number} people. ${nDate}`)
+  const nDate = new Date();
+  Person.find({}).then(persons => {
+    // Person.length
+   response.json(`Phonebook has info for ${Person.length} people. ${nDate}`) 
+  })
+   
   })
   
   // app.get('/api/persons', (request, response) => {
@@ -69,10 +69,16 @@ app.get('/info', (request, response) => {
     })
   })
 
-  app.get('/api/notes/:id', (request, response) => {
+  app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id).then(person => {
-      response.json(person)
+       // error handling:
+       if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
     })
+    .catch(error => next(error))
   })
 
   // app.get('/api/persons/:id', (request, response) => {
@@ -86,46 +92,101 @@ app.get('/info', (request, response) => {
   //     }
   // })
 
-  app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
+  // app.delete('/api/persons/:id', (request, response) => {
+  //   const id = Number(request.params.id)
+  //   persons = persons.filter(person => person.id !== id)
   
-    response.status(204).end()
-  })
+  //   response.status(204).end()
+  // })
   
 //   ex 3.5
-  const generateId = (min, max) => {
-        min = Math.ceil(persons.length)
-        max = Math.floor(persons.length + 1000)
-    const maxId =  Math.floor(Math.random() * (max - min + 1) + min )
+  // const generateId = (min, max) => {
+  //       min = Math.ceil(persons.length)
+  //       max = Math.floor(persons.length + 1000)
+  //   const maxId =  Math.floor(Math.random() * (max - min + 1) + min )
    
-    return maxId + 1
+  //   return maxId + 1
+  // }
+  
+  // app.post('/api/persons', (request, response) => {
+  //   const body = request.body
+  //   const newPerson = {
+  //     name: body.name,
+  //     number: body.number,
+  //     id: generateId(),
+  //   }
+  //   // ex 3.6
+  //   if (!body.name || !body.number) {
+  //     return response.status(400).json({ 
+  //       error: 'Name or number is missing' 
+  //     })
+  //   }
+  //   else if (persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
+  //       return response.status(400).json({ 
+  //           error: 'The name already exists in the phonebook' 
+  //   })
+  //   }
+  
+  //   persons = persons.concat(newPerson)
+  
+  //   response.json(newPerson)
+  //   console.log(request.body)
+  // })
+
+// ex 3.14
+app.post('/api/persons', (request, response, next) => {
+  const body = request.body
+
+  if (body.name === undefined || body.number === undefined) {
+    return response.status(400).json({ error: 'Name or number is missing' })
+  } else if (body.name.length < 3 || body.number.length < 8) {
+    return response.status(400).json({ error: 'Name or number is too short' })
   }
-  
-  app.post('/api/persons', (request, response) => {
-    const body = request.body
-    const newPerson = {
-      name: body.name,
-      number: body.number,
-      id: generateId(),
-    }
-    // ex 3.6
-    if (!body.name || !body.number) {
-      return response.status(400).json({ 
-        error: 'Name or number is missing' 
-      })
-    }
-    else if (persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
-        return response.status(400).json({ 
-            error: 'The name already exists in the phonebook' 
-    })
-    }
-  
-    persons = persons.concat(newPerson)
-  
-    response.json(newPerson)
-    console.log(request.body)
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
   })
+
+  // person.save().then(savedPerson => {
+  //   response.json(savedPerson)
+  // })
+  person
+  .save()
+  .then(savedPerson => savedPerson.toJSON())
+  .then(savedAndFormattedPerson => {
+    response.json(savedAndFormattedPerson)
+  }) 
+  //  it passes any potential exceptions to the error handler middleware:
+  .catch(error => next(error))
+
+})
+
+// ex 3.15
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+// ex 3.17 updating the person data:
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
   
   const unknownEndpoint = (req, res) => {
     response.status(404).send({ error: 'unknown endpoint' })
@@ -133,7 +194,19 @@ app.get('/info', (request, response) => {
   
   app.use(unknownEndpoint)
 
-
+// ex 3.16
+  const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    }
+    next(error)
+  }
+  
+  app.use(errorHandler)
 
   // const PORT = 3001
   // const PORT = process.env.PORT || 3001

@@ -1,8 +1,13 @@
-GET http://localhost:3001/api/persons/2
+GET http://localhost:3001/api/persons/613b60479dd39bcd897fb705
+
 
 ###
 
-DELETE http://localhost:3001/api/persons/3
+GET http://localhost:3001/info
+
+###
+
+DELETE http://localhost:3001/api/persons/6139aa36ef1336ad3d7e07c9
 
 ###
 
@@ -10,13 +15,18 @@ POST http://localhost:3001/api/persons/
 content-type: application/json
 
 { 
-      "number": "11-55-1423112",
-      "name": "mary grey"
+      "number": "33-55-4444",
+      "name": "Mary Grey"
       
     }
 
 ###
 
     POST https://morning-thicket-16795.herokuapp.com/api/persons
+
+###
+
+PUT http://localhost:3001/api/persons/
+
 
 
