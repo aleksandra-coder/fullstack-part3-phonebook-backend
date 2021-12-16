@@ -3,7 +3,7 @@ GET http://localhost:3001/api/persons/613b60479dd39bcd897fb705
 
 ###
 
-GET http://localhost:3001/info
+GET http://localhost:3001/api/persons
 
 ###
 
@@ -15,8 +15,8 @@ POST http://localhost:3001/api/persons/
 content-type: application/json
 
 { 
-      "number": "225-4",
-      "name": "Pu"
+      "number": "225-44444",
+      "name": "Pudel"
       
     }
 
@@ -26,7 +26,7 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:3001/api/persons/
+PUT http://localhost:3001/api/persons/613b60479dd39bcd897fb705
 
 
 

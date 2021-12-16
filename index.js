@@ -178,7 +178,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 // ex 3.17 updating the person data:
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
-
+  console.log(request.headers)
   const person = {
     name: body.name,
     number: body.number,
